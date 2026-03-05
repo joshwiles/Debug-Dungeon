@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Debug Dungeon</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link href="https://fonts.googleapis.com/css2?family=Press+Start+2P&family=VT323:wght@400&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- ===== START SCREEN ===== -->
+  <div id="start-screen" class="screen active">
+    <div class="scanlines"></div>
+    <div class="start-content">
+      <div class="game-logo">
+        <div class="logo-line1">DEBUG</div>
+        <div class="logo-line2">DUNGEON</div>
+      </div>
+      <p class="tagline">An interactive adventure game where players explore a dungeon<br>and defeat "bugs" by learning core programming concepts.</p>
+      <button class="btn-primary" id="start-btn">▶ START GAME</button>
+      <div class="start-auth-buttons">
+        <button class="btn-secondary" id="join-btn">JOIN CLASSROOM</button>
+        <button class="btn-auth-teacher" id="teacher-btn">TEACHER LOGIN</button>
+      </div>
+      <div id="auth-indicator" class="auth-indicator hidden"></div>
+      <p class="flavor">sequence · loops · variables · functions</p>
+      <button class="music-toggle btn-music" title="Mute music">🔊</button>
+    </div>
+  </div>
+
+  <!-- ===== LEVEL SELECT SCREEN ===== -->
+  <div id="level-select-screen" class="screen">
+    <div class="scanlines"></div>
+    <div class="levelselect-content">
+      <h2 class="screen-title">SELECT LEVEL</h2>
+      <div id="level-grid"></div>
+      <button class="btn-secondary" id="back-btn">← BACK</button>
+    </div>
+  </div>
+
+  <!-- ===== GAME SCREEN ===== -->
+  <div id="game-screen" class="screen">
+    <!-- Left Panel: Game Map -->
+    <div id="left-panel">
+      <div id="game-header">
+        <button class="btn-tiny" id="menu-btn">☰ MENU</button>
+        <span id="level-title-display">LEVEL 1</span>
+        <div id="hud">
+          <span id="hud-hp">❤️ <span id="hp-val">10</span></span>
+          <span id="hud-keys">🔑 <span id="keys-val">0</span></span>
+          <span id="hud-energy">⚡ <span id="energy-val">10</span></span>
+          <button class="music-toggle btn-music-sm" title="Mute music">🔊</button>
+        </div>
+      </div>
+      <div id="game-container"></div>
+      <div id="map-footer">
+        <span id="block-counter">0 / 6 BLOCKS USED</span>
+        <span id="status-msg"></span>
+      </div>
+    </div>
+
+    <!-- Right Panel: Command Panel -->
+    <div id="right-panel">
+
+      <!-- Mission Box -->
+      <div id="mission-box">
+        <div id="concept-tag">⚡ CONCEPT: LINEAR FLOW</div>
+        <div id="mission-text">Mission text here</div>
+        <div id="hint-text">💡 Hint text here</div>
+      </div>
+
+      <!-- Memory Bank -->
+      <div id="memory-bank">
+        <div class="panel-label">📊 MEMORY BANK <span class="label-sub">(variables)</span></div>
+        <div id="variables-display">
+          <span class="empty-vars">[ no variables yet ]</span>
+        </div>
+      </div>
+
+      <!-- Command Queue -->
+      <div id="queue-section">
+        <div class="panel-label">📋 COMMAND QUEUE
+          <span id="block-limit-display" class="label-sub">0/6 blocks</span>
+        </div>
+        <div id="command-queue">
+          <div class="queue-placeholder">← drag blocks here to build your program</div>
+        </div>
+      </div>
+
+      <!-- Block Palette -->
+      <div id="palette-section">
+        <div class="panel-label">🧩 BLOCK PALETTE</div>
+        <div id="palette-blocks"></div>
+      </div>
+
+      <!-- Run Controls -->
+      <div id="run-controls">
+        <button id="run-btn" class="btn-run">▶ RUN CODE</button>
+        <button id="step-btn" class="btn-step">⏭ STEP</button>
+        <button id="reset-btn" class="btn-reset">↺ RESET</button>
+        <div id="speed-wrap">
+          <span class="speed-label">SPEED</span>
+          <input type="range" id="speed-slider" min="1" max="10" value="5">
+        </div>
+      </div>
+
+      <!-- Console Output -->
+      <div id="console-panel">
+        <div class="panel-label">💻 CONSOLE OUTPUT</div>
+        <div id="console-output"></div>
+      </div>
+
+    </div><!-- /right-panel -->
+  </div><!-- /game-screen -->
+
+  <!-- ===== DASHBOARD SCREEN (Teacher) ===== -->
+  <div id="dashboard-screen" class="screen">
+    <div class="scanlines"></div>
+    <div id="dashboard-content">
+      <!-- Populated by dashboard.js -->
+    </div>
+  </div>
+
+  <!-- ===== AUTH OVERLAY ===== -->
+  <div id="auth-overlay" class="overlay hidden">
+    <div class="overlay-box auth-box">
+      <div id="auth-form-content"></div>
+    </div>
+  </div>
+
+  <!-- ===== VICTORY OVERLAY ===== -->
+  <div id="victory-overlay" class="overlay hidden">
+    <div class="overlay-box victory-box">
+      <div class="overlay-title">✅ LEVEL COMPLETE!</div>
+      <div id="victory-concept"></div>
+      <div id="victory-stats"></div>
+      <div class="overlay-buttons">
+        <button class="btn-primary" id="next-level-btn">NEXT LEVEL →</button>
+        <button class="btn-secondary" id="victory-levels-btn">LEVEL SELECT</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== DEFEAT OVERLAY ===== -->
+  <div id="defeat-overlay" class="overlay hidden">
+    <div class="overlay-box defeat-box">
+      <div class="overlay-title">❌ PROGRAM ENDED</div>
+      <div id="defeat-msg">Objective not met. Debug your code and try again!</div>
+      <div class="overlay-buttons">
+        <button class="btn-primary" id="retry-btn">↺ TRY AGAIN</button>
+        <button class="btn-secondary" id="defeat-levels-btn">LEVEL SELECT</button>
+      </div>
+    </div>
+  </div>
+
+  <!-- Scripts — order matters! -->
+  <script src="https://cdn.jsdelivr.net/npm/phaser@3.60.0/dist/phaser.min.js"></script>
+  <script src="js/levels.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/renderer.js"></script>
+  <script src="js/engine.js"></script>
+  <script src="js/ui.js"></script>
+  <script src="js/dragdrop.js"></script>
+  <script src="js/api.js"></script>
+  <script src="js/dashboard.js"></script>
+  <script src="js/music.js"></script>
+</body>
+</html>
